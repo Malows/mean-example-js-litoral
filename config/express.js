@@ -33,13 +33,13 @@ module.exports = function( db ) {
   app.use( bodyParser.json() );
   app.use( methodOverride() );
 
-  //var mongoStore = new MongoStore( {db: db.connection.db } ); // me da error de conexion
+  var mongoStore = new MongoStore( {mongooseConnection: db.connection } ); // me da error de conexion
 
   app.use( session( {
     saveUninitialized: true,
     resave: true,
     secret: config.sessionSecret,
-    //store: mongoStore,
+    store: mongoStore,
   }));
 
   app.use( flash() );
@@ -57,7 +57,7 @@ module.exports = function( db ) {
 
   //Express api
   app.use( express.static( './public' ) );
-  //require('./socketio')( server, io, mongoStore );
+  require('./socketio')( server, io, mongoStore );
 
   return server;
 };
